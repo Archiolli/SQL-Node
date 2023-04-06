@@ -40,9 +40,10 @@ app.get('/books/:id', (req, res) => {
 
     const { id } = req.params
 
-    const query = `SELECT * FROM books WHERE id = ${id}`
+    const query = `SELECT * FROM books WHERE ?? = ?`
+    const data = ['id', id]
 
-    conn.query(query, (err, data) => {
+    conn.query(query, data, (err, data) => {
         if (err) {
             console.log(err)
             return
@@ -57,19 +58,15 @@ app.get('/books/:id', (req, res) => {
     })
 })
 
-
-
-
-
-
 //ROTAS DE EDIÇÃO 
 app.get('/books/edit/:id', (req, res) => {
 
     const { id } = req.params
 
-    const query = `SELECT * FROM books WHERE id = ${id}`
+    const query = `SELECT * FROM books WHERE ?? = ?`
+    const data = ['id', id]
 
-    conn.query(query, (err, data) => {
+    conn.query(query, data,(err, data) => {
         if (err) {
             console.log(err)
             return
@@ -87,9 +84,9 @@ app.post('/books/updatebook', (req, res) => {
 
     const { title, pageqty, id } = req.body
 
-    const query = `UPDATE books SET title = '${title}', pageqty = '${pageqty}' WHERE id = ${id}`
-
-    conn.query(query, (err, data) => {
+    const query = `UPDATE books SET ?? = ?, ?? = ? WHERE ?? = ?`
+    const data = ['title', title,'pageqty',pageqty, 'id', id]
+    conn.query(query, data,(err, data) => {
         if (err) {
             console.log(err)
             return
@@ -101,34 +98,14 @@ app.post('/books/updatebook', (req, res) => {
     })
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //ROTAS DE POST
 app.post('/books/insertbook', function (req, res) {
     const title = req.body.title
     const pageqty = req.body.pageqty
 
-    const query = `INSERT INTO books (title, pageqty) VALUES ('${title}', ${pageqty})`
-
-    conn.query(query, function (err) {
+    const query = `INSERT INTO books (??, ??) VALUES (?, ?)`
+    const data = ['title', 'pageqty', title, pageqty]
+    conn.query(query, data, function (err) {
         if (err) {
             console.log(err)
         }
@@ -137,19 +114,14 @@ app.post('/books/insertbook', function (req, res) {
     })
 })
 
-
-
-
-
-
 //ROTAS PRA DELETE
 app.post('/books/remove/:id', (req, res) => {
 
     const { id } = req.params
+    const data = ['id', id]
+    const query = `DELETE FROM books WHERE ?? = ?`
 
-    const query = `DELETE FROM books WHERE id = ${id}`
-
-    conn.query(query, (err) =>{
+    conn.query(query, data, (err) =>{
         if (err){
             console.log(err);
             return;
@@ -158,19 +130,6 @@ app.post('/books/remove/:id', (req, res) => {
     })
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
 //CONEXÃO COM O BANCO (UNIVERSAL PRA SQL)
 const conn = mysql.createConnection({
     host: 'localhost',
